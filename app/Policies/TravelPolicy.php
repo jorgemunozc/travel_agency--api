@@ -9,9 +9,9 @@ use App\Models\User;
 
 class TravelPolicy
 {
-    public function before(User $user, string $ability): bool
+    public function before(?User $user, string $ability): ?bool
     {
-        if ($user->isAdmin()) {
+        if (! is_null($user) && $user->isAdmin()) {
             return true;
         }
 
@@ -34,9 +34,9 @@ class TravelPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(?User $user): bool
     {
-        return true;
+        return ! is_null($user) && $user->isAdmin();
     }
 
     /**

@@ -9,13 +9,15 @@ use Illuminate\Validation\Rule;
 
 class FilterSortRequest extends FormRequest
 {
-    // /**
-    //  * Determine if the user is authorized to make this request.
-    //  */
-    // public function authorize(): bool
-    // {
-    //     return $this->user()->can('view', $this->route('travel'));
-    // }
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        $travel = $this->route('travel');
+
+        return (is_null($this->user()) && $travel->isPublic()) || $this->user()?->can('view', $travel);
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -31,7 +33,7 @@ class FilterSortRequest extends FormRequest
             //date as unix timestamp
             'dateFrom' => ['numeric', Rule::when($this->has('dateTo'), ['lte:dateTo'])],
             'dateTo' => ['numeric', Rule::when($this->has('dateFrom'), ['gte:dateFrom'])],
-            'sort' => ['in:asc,desc'],
+            'sort' => [Rule::in(['asc', 'desc'])],
         ];
     }
 }

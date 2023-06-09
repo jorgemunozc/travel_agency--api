@@ -43,4 +43,19 @@ class TourTest extends TestCase
             ->getJson("/api/travels/{$travel->slug}/tours");
         $response->assertAccepted();
     }
+
+    public function testVisitorCantSeeFilterErrorsInPrivateTravel()
+    {
+        $travel = Travel::factory()->private()
+            ->has(Tour::factory()->count(3))
+            ->create();
+        $queryParams = [
+            'priceFrom' => 3000,
+            'priceTo' => 100,
+
+        ];
+        $query = http_build_query($queryParams);
+        $response = $this->getJson("/api/travels/{$travel->slug}/tours?{$query}");
+        $response->assertForbidden();
+    }
 }
