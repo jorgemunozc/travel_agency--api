@@ -11,7 +11,7 @@ class StoreTravelRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', Travel::class);
+        return ! is_null($this->user()) && $this->user()->can('create', Travel::class);
     }
 
     /**
