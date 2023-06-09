@@ -22,10 +22,10 @@ class Travel extends Model
 
     protected $fillable = [
         'is_public',
-        'slug',
         'name',
-        'description',
+        'slug',
         'num_of_days',
+        'description',
     ];
 
     protected $casts = [
