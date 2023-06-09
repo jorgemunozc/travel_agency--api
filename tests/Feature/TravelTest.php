@@ -31,8 +31,12 @@ class TravelTest extends TestCase
 
     public function testUserThatIsNotAdminCantCreateTravel(): void
     {
-        $user = $this->loginAs('editor');
-        $travelData = [];
+        $user = $this->loginAs('normal');
+        $travelData = [
+            'name' => 'failed test',
+            'num_of_days' => 4,
+            'description' => 'A wornderful failed test :d',
+        ];
         $response = $this
             ->actingAs($user)
             ->postJson('api/travels', $travelData);
