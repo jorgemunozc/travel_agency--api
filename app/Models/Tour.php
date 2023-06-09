@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ class Tour extends Model
 {
     use HasFactory;
     use HasUuids;
+    use Filterable;
 
     protected $fillable = [
         'name',
