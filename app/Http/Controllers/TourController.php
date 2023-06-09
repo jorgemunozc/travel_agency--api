@@ -19,8 +19,8 @@ class TourController extends Controller
     {
         $this->authorize('view', $travel);
         $query = $travel->tours()->filter($request->validated());
-        if ($request->has('price')) {
-            $query = $query->orderBy('price', $request->price);
+        if ($request->has('sort')) {
+            $query = $query->orderBy('price', $request->sort);
         }
         $tours = $query
             ->orderBy('starting_date', 'asc')
