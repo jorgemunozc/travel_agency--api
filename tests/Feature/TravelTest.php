@@ -51,6 +51,7 @@ class TravelTest extends TestCase
             ->assertSuccessful()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->has('data')
+                ->has('meta')
                 ->count('data', $travels->count())
                 ->etc());
     }
