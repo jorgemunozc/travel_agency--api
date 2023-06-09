@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTravelRequest;
 use App\Http\Requests\UpdateTravelRequest;
 use App\Models\Travel;
+use Illuminate\Http\JsonResponse;
 
 class TravelController extends Controller
 {
@@ -19,9 +22,12 @@ class TravelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTravelRequest $request)
+    public function store(StoreTravelRequest $request): JsonResponse
     {
-        //
+        return response()
+            ->json(
+                Travel::create($request->validated())
+            )->setStatusCode(JsonResponse::HTTP_CREATED);
     }
 
     /**
