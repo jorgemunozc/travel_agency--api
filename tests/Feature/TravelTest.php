@@ -17,7 +17,7 @@ class TravelTest extends TestCase
         $travelInput = [];
         $response = $this
             ->actingAs($admin)
-            ->postJson('/travels', $travelInput);
+            ->postJson('/api/travels', $travelInput);
 
         $response->assertCreated();
         $this->assertDatabaseCount('travels', 1);
