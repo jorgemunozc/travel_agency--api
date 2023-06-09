@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Travel;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class TravelTest extends TestCase
@@ -35,5 +37,18 @@ class TravelTest extends TestCase
             ->actingAs($user)
             ->postJson('api/travels', $travelData);
         $response->assertForbidden();
+    }
+
+    public function testVisitorsCanViewPublicTravels()
+    {
+        Travel::factory()->count(8)->create(['is_public' => false]);
+        $travels = Travel::factory()->count(4)->public()->create();
+        $response = $this->getJson('/api/travels');
+        $response
+            ->assertSuccessful()
+            ->assertJson(fn (AssertableJson $json) => $json
+                ->has('data')
+                ->count('data', $travels->count())
+                ->etc());
     }
 }

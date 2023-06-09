@@ -51,4 +51,14 @@ class Travel extends Model
     {
         return $this->hasMany(Tour::class);
     }
+
+    public function isPublic(): bool
+    {
+        return $this->is_public;
+    }
+
+    public function isPrivate(): bool
+    {
+        return ! $this->is_public;
+    }
 }

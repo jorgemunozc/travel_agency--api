@@ -15,7 +15,7 @@ class TravelPolicy
             return true;
         }
 
-        return false;
+        return null;
     }
 
     public function viewAny(User $user): bool
@@ -26,9 +26,9 @@ class TravelPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Travel $travel): bool
+    public function view(?User $user, Travel $travel): bool
     {
-        return true;
+        return $travel->isPublic();
     }
 
     /**
