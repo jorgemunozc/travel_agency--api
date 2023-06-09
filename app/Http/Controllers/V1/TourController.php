@@ -6,6 +6,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\FilterSortRequest;
+use App\Http\Resources\V1\TourResource;
 use App\Models\Tour;
 use App\Models\Travel;
 use Illuminate\Http\JsonResponse;
@@ -27,8 +28,9 @@ class TourController extends Controller
             ->orderBy('starting_date', 'asc')
             ->paginate();
 
-        return response()
-            ->json($tours, JsonResponse::HTTP_ACCEPTED);
+        return TourResource::collection($tours)
+            ->response()
+            ->setStatusCode(JsonResponse::HTTP_OK);
     }
 
     /**
