@@ -7,6 +7,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreTravelRequest;
 use App\Http\Requests\V1\UpdateTravelRequest;
+use App\Http\Resources\V1\TravelResource;
 use App\Models\Travel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,9 @@ class TravelController extends Controller
         if (is_null(Auth::user())) {
             $travels = Travel::whereIsPublic(true)->paginate();
 
-            return response()
-                ->json($travels, JsonResponse::HTTP_ACCEPTED);
+            return TravelResource::collection($travels)
+                ->response()
+                ->setStatusCode(JsonResponse::HTTP_OK);
         }
     }
 
@@ -28,10 +30,9 @@ class TravelController extends Controller
      */
     public function store(StoreTravelRequest $request): JsonResponse
     {
-        return response()
-            ->json(
-                Travel::create($request->validated())
-            )->setStatusCode(JsonResponse::HTTP_CREATED);
+        return (new TravelResource(Travel::create($request->validated())))
+            ->response()
+            ->setStatusCode(JsonResponse::HTTP_CREATED);
     }
 
     // /**
