@@ -19,7 +19,7 @@ class TourTest extends TestCase
             ->has(Tour::factory()->count(3))
             ->create();
         $response = $this->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
-        $response->assertAccepted()
+        $response->assertSuccessful()
             ->assertJsonCount($travel->loadCount('tours')->tours_count, 'data');
     }
 
@@ -43,7 +43,7 @@ class TourTest extends TestCase
         $response = $this
             ->actingAs($this->loginAs())
             ->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
-        $response->assertAccepted();
+        $response->assertSuccessful();
     }
 
     public function testVisitorCantSeeFilterErrorsInPrivateTravel()
