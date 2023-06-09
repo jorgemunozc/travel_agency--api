@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class CreateUserRequest extends FormRequest
 {
     /**
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string,\Illuminate\Contracts\Validation\ValidationRule|array<int,string>|string>
      */
     public function rules(): array
     {
