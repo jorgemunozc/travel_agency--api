@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('name', 200);
             $table->dateTime('starting_date');
             $table->dateTime('ending_date');
-            $table->unsignedMediumInteger('price');
+            $table->unsignedInteger('price');
             $table->foreignUuid('travel_id')->constrained(table: 'travels');
             $table->timestamps();
         });
