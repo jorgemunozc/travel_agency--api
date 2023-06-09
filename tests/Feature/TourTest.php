@@ -10,13 +10,15 @@ use Tests\TestCase;
 
 class TourTest extends TestCase
 {
+    private string $TRAVEL_API_ENDPOINT = '/api/v1/travels';
+
     public function testVisitorCanSeeToursForSpecifiedTravel()
     {
         $travel = Travel::factory()
             ->public()
             ->has(Tour::factory()->count(3))
             ->create();
-        $response = $this->getJson("/api/travels/{$travel->slug}/tours");
+        $response = $this->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
         $response->assertAccepted()
             ->assertJsonCount($travel->loadCount('tours')->tours_count, 'data');
     }
@@ -27,7 +29,7 @@ class TourTest extends TestCase
             ->private()
             ->has(Tour::factory()->count(fake()->randomDigit()))
             ->create();
-        $response = $this->getJson("api/travels/{$travel->slug}/tours");
+        $response = $this->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
         $response->assertForbidden();
     }
 
@@ -40,7 +42,7 @@ class TourTest extends TestCase
         $travel = $travels->random();
         $response = $this
             ->actingAs($this->loginAs())
-            ->getJson("/api/travels/{$travel->slug}/tours");
+            ->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
         $response->assertAccepted();
     }
 
@@ -55,7 +57,7 @@ class TourTest extends TestCase
 
         ];
         $query = http_build_query($queryParams);
-        $response = $this->getJson("/api/travels/{$travel->slug}/tours?{$query}");
+        $response = $this->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours?{$query}");
         $response->assertForbidden();
     }
 }

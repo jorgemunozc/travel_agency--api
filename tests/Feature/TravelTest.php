@@ -10,9 +10,8 @@ use Tests\TestCase;
 
 class TravelTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
+    private string $TRAVEL_API_ENDPOINT = '/api/v1/travels';
+
     public function testAdminCanCreateNewTravel(): void
     {
         $admin = $this->loginAs();
@@ -23,7 +22,7 @@ class TravelTest extends TestCase
         ];
         $response = $this
             ->actingAs($admin)
-            ->postJson('/api/travels', $travelInput);
+            ->postJson($this->TRAVEL_API_ENDPOINT, $travelInput);
 
         $response->assertCreated();
         $this->assertDatabaseCount('travels', 1);
@@ -39,7 +38,7 @@ class TravelTest extends TestCase
         ];
         $response = $this
             ->actingAs($user)
-            ->postJson('api/travels', $travelData);
+            ->postJson($this->TRAVEL_API_ENDPOINT, $travelData);
         $response->assertForbidden();
     }
 
@@ -47,7 +46,7 @@ class TravelTest extends TestCase
     {
         Travel::factory()->count(8)->create(['is_public' => false]);
         $travels = Travel::factory()->count(4)->public()->create();
-        $response = $this->getJson('/api/travels');
+        $response = $this->getJson($this->TRAVEL_API_ENDPOINT);
         $response
             ->assertSuccessful()
             ->assertJson(fn (AssertableJson $json) => $json

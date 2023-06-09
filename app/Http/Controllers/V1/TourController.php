@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V1;
 
-use App\Http\Requests\FilterSortRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\FilterSortRequest;
 use App\Models\Tour;
 use App\Models\Travel;
 use Illuminate\Http\JsonResponse;

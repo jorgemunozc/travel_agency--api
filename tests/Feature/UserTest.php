@@ -14,7 +14,7 @@ class UserTest extends TestCase
         $admin = $this->loginAs();
         $response = $this
             ->actingAs($admin)
-            ->postJson('/api/users', [
+            ->postJson('/api/v1/users', [
                 'email' => $fakeEmail,
                 'password' => fake()->password(8),
             ]);

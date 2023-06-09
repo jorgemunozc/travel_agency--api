@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V1;
 
-use App\Http\Requests\StoreTravelRequest;
-use App\Http\Requests\UpdateTravelRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\StoreTravelRequest;
+use App\Http\Requests\V1\UpdateTravelRequest;
 use App\Models\Travel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
