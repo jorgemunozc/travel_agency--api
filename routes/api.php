@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\CreateUserController;
+use App\Http\Controllers\TravelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    // Route::resource('/users');
-    // Route::resource(('/travels'));
-    // Route::resource('travels.tour');
+    Route::post('/users', CreateUserController::class);
+    Route::post('/travels', [TravelController::class, 'store']);
 });
