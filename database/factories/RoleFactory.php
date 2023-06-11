@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\Roles;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class RoleFactory extends Factory
      */
     public function definition(): array
     {
-        $roles = ['admin', 'editor', 'user'];
+        $roles = Roles::cases();
 
         return [
             'name' => fake()->randomElement($roles),
@@ -28,7 +29,21 @@ class RoleFactory extends Factory
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'name' => 'admin',
+            'name' => Roles::Admin,
+        ]);
+    }
+
+    public function editor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => Roles::Editor,
+        ]);
+    }
+
+    public function normal(): static
+    {
+        return $this->state(fn () => [
+            'name' => Roles::Normal,
         ]);
     }
 }
