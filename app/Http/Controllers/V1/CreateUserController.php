@@ -15,7 +15,7 @@ class CreateUserController extends Controller
     public function __invoke(CreateUserRequest $request): JsonResponse
     {
         return response()
-            ->json(new UserResource(User::create($request->validated())))
+            ->json(new UserResource(User::create($request->safe()->all())))
             ->setStatusCode(JsonResponse::HTTP_CREATED);
     }
 }

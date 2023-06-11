@@ -20,7 +20,7 @@ class TourController extends Controller
     public function index(FilterSortRequest $request, Travel $travel): JsonResponse
     {
         $this->authorize('view', $travel);
-        $query = $travel->tours()->filter($request->validated());
+        $query = $travel->tours()->filter($request->safe()->all());
         if ($request->has('sort')) {
             $query = $query->orderBy('price', $request->sort);
         }
