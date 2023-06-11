@@ -9,25 +9,29 @@ use EloquentFilter\ModelFilter;
 
 class TourFilter extends ModelFilter
 {
-    public function priceFrom(int $price): self
+    /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
+    public function priceFrom(int $price)
     {
 
         return $this->where('price', '>=', ($price * 100));
     }
 
-    public function priceTo(int $price): self
+    /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
+    public function priceTo(int $price)
     {
         return $this->where('price', '<=', ($price * 100));
     }
 
-    public function dateFrom(int $unixTimestamp): self
+    /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
+    public function dateFrom(int $unixTimestamp)
     {
         $date = CarbonImmutable::createFromTimestampUTC($unixTimestamp);
 
         return $this->where('starting_date', '>=', $date);
     }
 
-    public function dateTo(int $unixTimestamp): self
+    /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
+    public function dateTo(int $unixTimestamp)
     {
         $date = CarbonImmutable::createFromTimestampUTC($unixTimestamp);
 

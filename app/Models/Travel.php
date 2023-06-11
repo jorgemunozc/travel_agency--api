@@ -40,6 +40,7 @@ class Travel extends Model
             ->saveSlugsTo('slug');
     }
 
+    /** @return Attribute<int,never> */
     protected function numOfNights(): Attribute
     {
         return Attribute::make(
@@ -47,6 +48,7 @@ class Travel extends Model
         );
     }
 
+    /** @return HasMany<Tour> */
     public function tours(): HasMany
     {
         return $this->hasMany(Tour::class);

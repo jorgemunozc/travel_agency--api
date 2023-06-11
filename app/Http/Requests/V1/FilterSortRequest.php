@@ -9,20 +9,16 @@ use Illuminate\Validation\Rule;
 
 class FilterSortRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
+        /** @var \App\Models\Travel */
         $travel = $this->route('travel');
 
         return (is_null($this->user()) && $travel->isPublic()) || $this->user()?->can('view', $travel);
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string,\Illuminate\Contracts\Validation\ValidationRule|array<int,string|\Illuminate\Validation\ConditionalRules|\Illuminate\Validation\Rules\In>|string>
      */
     public function rules(): array
     {

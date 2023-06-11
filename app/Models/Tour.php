@@ -30,6 +30,7 @@ class Tour extends Model
         'ending_date' => 'immutable_datetime',
     ];
 
+    /** @return Attribute<float,int> */
     public function price(): Attribute
     {
         return Attribute::make(
@@ -38,6 +39,7 @@ class Tour extends Model
         );
     }
 
+    /** @return BelongsTo<Travel,Tour> */
     public function travel(): BelongsTo
     {
         return $this->belongsTo(Travel::class);
