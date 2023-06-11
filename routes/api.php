@@ -23,5 +23,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users', CreateUserController::class);
         Route::post('/travels', [TravelController::class, 'store']);
+        Route::put('/travels/{travel}', [TravelController::class, 'update']);
     });
 });

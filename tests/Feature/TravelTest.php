@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\Roles;
 use App\Models\Travel;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -30,7 +31,7 @@ class TravelTest extends TestCase
 
     public function testUserThatIsNotAdminCantCreateTravel(): void
     {
-        $user = $this->loginAs('normal');
+        $user = $this->loginAs(Roles::Normal);
         $travelData = [
             'name' => 'failed test',
             'num_of_days' => 4,
@@ -54,5 +55,38 @@ class TravelTest extends TestCase
                 ->has('meta')
                 ->count('data', $travels->count())
                 ->etc());
+    }
+
+    public function testEditorCanUpdateTravel()
+    {
+        $user = $this->loginAs(Roles::Editor);
+        $travel = Travel::factory()->private()->create();
+        $response = $this->actingAs($user)
+            ->putJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->id}", [
+                'name' => 'Juan Carlos En Vivo',
+                'is_public' => true,
+            ]);
+        $response->assertSuccessful();
+        $this->assertDatabaseHas($travel->getTable(), [
+            'id' => $travel->id,
+            'name' => 'Juan Carlos En Vivo',
+            'is_public' => true,
+        ]);
+    }
+
+    public function testOnlyEditorsAndAdminCanUpdateTravels()
+    {
+        $user = $this->loginAs(Roles::Normal);
+        $travel = Travel::factory()->create();
+        $newDescription = 'I cant update this travel because I have no power :(';
+        $response = $this->actingAs($user)
+            ->putJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->id}", [
+                'description' => $newDescription,
+            ]);
+        $response->assertForbidden();
+        $this->assertDatabaseMissing($travel->getTable(), [
+            'id' => $travel->id,
+            'description' => $newDescription,
+        ]);
     }
 }

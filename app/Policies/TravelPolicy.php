@@ -42,9 +42,9 @@ class TravelPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Travel $travel): bool
+    public function update(User $user): bool
     {
-        return true;
+        return $user->isAdmin() || $user->isEditor();
     }
 
     /**

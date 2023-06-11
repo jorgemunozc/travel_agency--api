@@ -23,6 +23,10 @@ class TravelController extends Controller
                 ->response()
                 ->setStatusCode(JsonResponse::HTTP_OK);
         }
+
+        return TravelResource::collection(Travel::paginate())
+            ->response()
+            ->setStatusCode(JsonResponse::HTTP_OK);
     }
 
     /**
@@ -30,7 +34,7 @@ class TravelController extends Controller
      */
     public function store(StoreTravelRequest $request): JsonResponse
     {
-        return (new TravelResource(Travel::create($request->validated())))
+        return (new TravelResource(Travel::create($request->safe()->all())))
             ->response()
             ->setStatusCode(JsonResponse::HTTP_CREATED);
     }
@@ -43,13 +47,13 @@ class TravelController extends Controller
     //     //
     // }
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  */
-    // public function update(UpdateTravelRequest $request, Travel $travel)
-    // {
-    //     //
-    // }
+    public function update(UpdateTravelRequest $request, Travel $travel): JsonResponse
+    {
+        $travel->fill($request->safe()->all());
+        $travel->save();
+
+        return response()->json(status: JsonResponse::HTTP_NO_CONTENT);
+    }
 
     // /**
     //  * Remove the specified resource from storage.
