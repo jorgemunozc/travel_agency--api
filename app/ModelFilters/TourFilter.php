@@ -10,16 +10,16 @@ use EloquentFilter\ModelFilter;
 class TourFilter extends ModelFilter
 {
     /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
-    public function priceFrom(int $price)
+    public function priceFrom(float $price)
     {
 
-        return $this->where('price', '>=', ($price * 100));
+        return $this->where('price', '>=', (int) ($price * 100));
     }
 
     /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
-    public function priceTo(int $price)
+    public function priceTo(float $price)
     {
-        return $this->where('price', '<=', ($price * 100));
+        return $this->where('price', '<=', (int) ($price * 100));
     }
 
     /** @return \Illuminate\Database\Eloquent\Builder<\App\Models\Tour> */
