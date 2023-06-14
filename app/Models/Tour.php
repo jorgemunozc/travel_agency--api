@@ -25,7 +25,6 @@ class Tour extends Model
     ];
 
     protected $casts = [
-        'price' => 'integer',
         'starting_date' => 'immutable_datetime',
         'ending_date' => 'immutable_datetime',
     ];
@@ -35,7 +34,7 @@ class Tour extends Model
     {
         return Attribute::make(
             get: fn (int $value) => $value / 100,
-            set: fn (int $value) => $value * 100,
+            set: fn (float $value) => (int) ($value * 100),
         );
     }
 
