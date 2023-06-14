@@ -128,6 +128,11 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'db' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/db.log'),
+        ],
     ],
 
 ];
