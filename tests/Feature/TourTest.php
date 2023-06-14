@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\Tour;
 use App\Models\Travel;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class TourTest extends TestCase
@@ -27,7 +28,7 @@ class TourTest extends TestCase
     {
         $travel = Travel::factory()
             ->private()
-            ->has(Tour::factory()->count(fake()->randomDigit()))
+            ->has(Tour::factory()->count(fake()->numberBetween(1, 5)))
             ->create();
         $response = $this->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
         $response->assertForbidden();
@@ -36,14 +37,53 @@ class TourTest extends TestCase
     public function testAdminCanSeeToursForAnyTravel()
     {
         $travels = Travel::factory()
-            ->has(Tour::factory()->count(fake()->randomDigit()))
-            ->count(fake()->randomDigit())
+            ->has(Tour::factory()->count(fake()->numberBetween(1, 9)))
+            ->count(3)
             ->create();
         $travel = $travels->random();
         $response = $this
             ->actingAs($this->loginAs())
             ->getJson("{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours");
-        $response->assertSuccessful();
+        $response->assertJsonCount($travel->tours()->count(), 'data');
+    }
+
+    /** @group db */
+    public function testVisitorCanSeeOnlyToursFilteredBetweenPrices()
+    {
+        $lowestPriceRange = 990.99;
+        $highestPriceRange = 1500.45;
+        $travel = Travel::factory()->public()->create();
+        $tourWithLowestPriceInRange = Tour::factory()
+            ->for($travel)
+            ->create([
+                'price' => $lowestPriceRange,
+            ]);
+        $tourWithHighestPriceRange = Tour::factory()
+            ->for($travel)
+            ->create([
+                'price' => $highestPriceRange,
+            ]);
+        $tourWithPriceOutsideOfRange = Tour::factory()
+            ->for($travel)
+            ->create([
+                'price' => ($highestPriceRange) + 150,
+            ]);
+        $response = $this->json('GET', "{$this->TRAVEL_API_ENDPOINT}/{$travel->slug}/tours", [
+            'priceFrom' => $lowestPriceRange,
+            'priceTo' => $highestPriceRange,
+        ]);
+        $response
+            ->assertJson(fn (AssertableJson $json) => $json
+                ->has('data', 2, fn (AssertableJson $item) => $item
+                    ->where('id', fn (string $id) => in_array($id, [$tourWithHighestPriceRange->id, $tourWithLowestPriceInRange->id]))
+                    ->where('price', function (string $price) use ($lowestPriceRange, $highestPriceRange) {
+
+                        return (float) $price >= $lowestPriceRange && (float) $price <= $highestPriceRange;
+                    })
+                    ->etc()
+                )
+                ->etc()
+            );
     }
 
     public function testVisitorCantSeeFilterErrorsInPrivateTravel()
