@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -29,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
                 Log::channel('db')->info('query', [$query->sql, $query->bindings]);
             }
         });
+        Model::shouldBeStrict();
     }
 }
