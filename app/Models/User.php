@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -60,5 +62,31 @@ class User extends Authenticatable
     public function isEditor(): bool
     {
         return $this->roles()->whereName(Roles::Editor)->exists();
+    }
+
+    public function createNewUser(string $email, ?string $password): static
+    {
+        if (empty($email)) {
+            throw new InvalidArgumentException('Email no provided.');
+        }
+        if (is_null($password)) {
+            $password = Str::password(18);
+        }
+
+        $this->fill([
+            'email' => $email,
+            'password' => $password,
+        ]);
+        $this->save();
+
+        return $this;
+    }
+
+    public function addRole(Roles $role): static
+    {
+        $roleToAssign = Role::firstOrCreate(['name' => $role]);
+        $this->roles()->attach($roleToAssign);
+
+        return $this;
     }
 }
